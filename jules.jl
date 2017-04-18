@@ -1,5 +1,7 @@
-# global variables
 
+module Jules
+
+# global variables
 Fs = 5000; # sampling frequency
 T = 1/Fs;
 # functions
@@ -226,4 +228,6 @@ function idft(X)
     a = conj(X)
     b = fft(a)
     return real(b)
+end
+
 end
