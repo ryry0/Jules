@@ -230,4 +230,60 @@ function idft(X)
     return real(b)
 end
 
+
+function RK4(u::Float64, du, t::Float64, dt::Float64)
+    k1 = du(t, u)
+    k2 = du(t + dt/2, u + dt/2*k1)
+    k3 = du(t + dt/2, u + dt/2*k2)
+    k4 = du(t + dt, u + dt*k3)
+    dU = k1 + 2*k2 + 2*k2 + k4
+    return U = u + dU*dt/6.0
+end
+
+function Int4(u::Vector{Float64}, du, t, dt)
+    A = 18.0/11.0
+    B = -9.0/11.0
+    C = 2.0/11.0
+    D = 6.0/11.0
+
+    # U = A*u[n-1] + B*[n-2] + C*[n-3] + D*du*dt
+    return U = A*u[end-1] + B*u[end-2] + C*u[end-3] + D*du(t, u[end])*dt
+end
+
+function interp(x_basis::Vector{Float64}, y_basis::Vector{Float64}, t::Float64)
+    #print("time $t\n")
+    next_index = findfirst(x -> x > t, x_basis)
+    if t >= x_basis[end]
+        next_index = length(x_basis)
+    end
+    prev_index = next_index -1
+    nearest_time = x_basis[prev_index]
+    #=
+    print("nearest time $nearest_time\n")
+    =#
+    avg_constant = t - x_basis[prev_index]
+
+    #=
+    print("avg_constant ")
+    print(avg_constant)
+    print("\n")
+
+    print("1 -avg_constant ")
+    print(1- avg_constant)
+    print("\n")
+    print("1 -avg_constant ")
+    print(1- avg_constant)
+    print("\n")
+    =#
+    out = (1 - avg_constant)*y_basis[prev_index] + avg_constant*y_basis[next_index]
+
+    #=
+    print("out ")
+    print(out)
+    print("\n\n")
+    =#
+
+    return out
+end
+
 end
