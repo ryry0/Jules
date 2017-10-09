@@ -1,6 +1,5 @@
 
 module Jules
-
 # global variables
 Fs = 5000; # sampling frequency
 T = 1/Fs;
@@ -284,6 +283,17 @@ function interp(x_basis::Vector{Float64}, y_basis::Vector{Float64}, t::Float64)
     =#
 
     return out
+end
+
+module SymJules
+using SymPy
+using PyCall
+using LaTeXStrings
+@pyimport sympy.physics.mehcanics as mechanics
+
+dynamicsymbols = x -> mechanics.dynamicsymbols(x)
+mprint = x -> print(mechanics.vlatex(x))
+mshow = x -> latexstring(mechanics.vlatex(x))
 end
 
 end
